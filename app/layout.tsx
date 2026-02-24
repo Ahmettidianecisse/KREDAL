@@ -23,39 +23,40 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://eindev.ir'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://kredal.ai'),
   title: {
-    default: "EINCODE — Ehsan Ghaffar's Digital Laboratory",
-    template: "%s | EINCODE",
+    default: "KREDAL — Financial Intelligence for Africa",
+    template: "%s | KREDAL",
   },
   description:
-    "A digital workshop where code meets curiosity. Experiments, prototypes, and open-source artifacts by Ehsan Ghaffar.",
-  keywords: ["Software Engineering", "Web Development", "Next.js", "React", "TypeScript", "AI", "Machine Learning", "Systems Programming", "Code Experiments"],
-  authors: [{ name: "Ehsan Ghaffar", url: "https://github.com/ehsanghaffar" }],
-  creator: "Ehsan Ghaffar",
-  publisher: "Ehsan Ghaffar",
-  generator: "v0.app",
+    "AI-powered credit scoring infrastructure built for African fintechs. Score any borrower in milliseconds using alternative data — mobile money, behavioral signals, psychometric insights.",
+  keywords: ["Credit Scoring", "Fintech Africa", "Alternative Data", "AI Scoring", "Mobile Money", "Financial Inclusion", "Microfinance", "Machine Learning", "REST API", "BNPL Africa"],
+  authors: [{ name: "Kredal", url: "https://kredal.ai" }],
+  creator: "Kredal",
+  publisher: "Kredal",
+  generator: "kredal.ai",
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "fr_SN",
+    alternateLocale: "en_US",
     url: "/",
-    title: "EINCODE — Ehsan Ghaffar's Digital Laboratory",
-    description: "A digital workshop where code meets curiosity. Experiments, prototypes, and open-source artifacts by Ehsan Ghaffar.",
-    siteName: "EINCODE",
+    title: "KREDAL — Financial Intelligence for Africa",
+    description: "AI-powered credit scoring infrastructure built for African fintechs. Score any borrower in milliseconds using alternative data.",
+    siteName: "KREDAL",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "EINCODE — Ehsan Ghaffar's Digital Laboratory",
+        alt: "KREDAL — Financial Intelligence for Africa",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "EINCODE — Ehsan Ghaffar's Digital Laboratory",
-    description: "A digital workshop where code meets curiosity. Experiments, prototypes, and open-source artifacts.",
-    creator: "@ehsanghaffar",
+    title: "KREDAL — Financial Intelligence for Africa",
+    description: "AI-powered credit scoring infrastructure built for African fintechs. Score any borrower in milliseconds.",
+    creator: "@kredal_ai",
     images: ["/og-image.png"],
   },
   robots: {

@@ -10,16 +10,16 @@ import Link from "next/link"
 
 const navItems = [
   { label: "Home", href: "/" },
-  { label: "Projects", href: "/projects" },
-  // { label: "Notes", href: "/notes" },/
-  { label: "Workbench", href: "/workbench" },
+  { label: "Products", href: "/products" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Docs", href: "/docs" },
   { label: "Blog", href: "/blog" },
 ]
 
 const socialLinks = [
-  { label: "GitHub", href: "https://github.com/ehsanghaffar", icon: Github },
-  { label: "Twitter", href: "https://twitter.com/ehsanghaffar", icon: Twitter },
-  { label: "LinkedIn", href: "https://linkedin.com/in/ehsanghaffar", icon: Linkedin },
+  { label: "GitHub", href: "https://github.com/kredal", icon: Github },
+  { label: "Twitter", href: "https://twitter.com/kredal_ai", icon: Twitter },
+  { label: "LinkedIn", href: "https://linkedin.com/company/kredal", icon: Linkedin },
 ]
 
 export function Header() {
@@ -50,14 +50,15 @@ export function Header() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 py-4">
         <nav className="flex items-center justify-between">
+          {/* Logo */}
           <Link href="/" className="group flex items-center gap-3">
             <div className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-primary/50 bg-primary/10 font-mono text-sm text-primary transition-all duration-400 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-primary/25">
-              <span className="glitch">{"⚡"}</span>
+              <span className="glitch">{"K"}</span>
             </div>
             <span className="font-mono text-sm tracking-tight">
-              EIN
+              KRED
               <span className="bg-gradient-to-l from-primary/50 to-accent bg-clip-text text-transparent font-semibold">
-                CODE
+                AL
               </span>
             </span>
           </Link>
@@ -113,6 +114,7 @@ export function Header() {
           </div>
 
           <div className="flex items-center gap-4">
+            {/* Social Links */}
             <div className="hidden items-center gap-1 sm:flex">
               {socialLinks.map((link) => (
                 <a
@@ -133,14 +135,16 @@ export function Header() {
 
             <div className="hidden h-5 w-px bg-border sm:block" />
 
+            {/* Status Badge */}
             <div className="hidden items-center gap-2.5 font-mono text-xs text-muted-foreground sm:flex px-3 py-1.5 rounded-full bg-secondary/50 border border-border/50">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
               </span>
-              <span>status: building</span>
+              <span>status: forging</span>
             </div>
 
+            {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card/50 md:hidden transition-colors hover:bg-secondary"
@@ -173,7 +177,7 @@ export function Header() {
         {/* Mobile Menu */}
         <div
           className={cn(
-            " transition-all duration-400 md:hidden bg-background",
+            "transition-all duration-400 md:hidden bg-background",
             isMobileMenuOpen ? "max-h-96 opacity-100 pt-4" : "max-h-0 opacity-0",
           )}
         >
@@ -217,7 +221,7 @@ export function Header() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
               </span>
-              <span>status: building</span>
+              <span>status: forging</span>
             </div>
           </div>
         </div>

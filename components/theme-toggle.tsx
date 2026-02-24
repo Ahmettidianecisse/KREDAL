@@ -26,22 +26,17 @@ export function ThemeToggle() {
     { value: "dark", icon: Moon, label: "Dark" },
   ];
 
-  // Handle undefined theme - default to "dark" as per layout.tsx defaultTheme
   const currentTheme = theme ?? "dark";
-  
-  // Determine which icon to show based on resolved theme (what user actually sees)
+
   let CurrentIcon: typeof Sun | typeof Moon | typeof Monitor;
   if (currentTheme === "system") {
     CurrentIcon = Monitor;
   } else {
-    // Use resolvedTheme for icon when available (handles system theme case)
     const displayTheme = resolvedTheme ?? currentTheme;
     const themeIndex = themes.findIndex((t) => t.value === displayTheme);
     CurrentIcon = themes[themeIndex >= 0 ? themeIndex : 0]?.icon || Moon;
   }
-  
-  // For next theme, cycle through available themes based on current theme setting
-  // If current theme is "system" or not in themes array, start from "light"
+
   const themeIndex = themes.findIndex((t) => t.value === currentTheme);
   const nextIndex = themeIndex >= 0 ? (themeIndex + 1) % themes.length : 0;
   const nextTheme = themes[nextIndex];
