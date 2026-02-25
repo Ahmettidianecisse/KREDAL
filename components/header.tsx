@@ -12,8 +12,10 @@ const navItems = [
   { label: "Home", href: "/" },
   { label: "Products", href: "/products" },
   { label: "Pricing", href: "/pricing" },
+  { label: "Playground", href: "/playground" }, // ← ajoute ça
   { label: "Docs", href: "/docs" },
   { label: "Blog", href: "/blog" },
+  { label: "Team", href: "/team" }, // ← ajoute ça
 ]
 
 const socialLinks = [

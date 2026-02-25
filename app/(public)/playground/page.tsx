@@ -4,49 +4,26 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Zap, ArrowRight, RefreshCw, CheckCircle, AlertTriangle, XCircle } from "lucide-react"
 
+const KREDAL_API = process.env.NEXT_PUBLIC_KREDAL_API || "http://localhost:8000"
+const API_KEY = process.env.NEXT_PUBLIC_KREDAL_API_KEY || "test-key-123"
+
 const sampleBorrowers = [
-  { name: "Amadou Diallo", phone: "+221 77 123 4567", city: "Dakar" },
-  { name: "Fatou Mbaye", phone: "+221 76 234 5678", city: "Thiès" },
-  { name: "Oumar Sy", phone: "+221 78 345 6789", city: "Saint-Louis" },
-  { name: "Aissatou Diop", phone: "+221 70 456 7890", city: "Ziguinchor" },
+  { name: "Amadou Diallo", phone: "+221771234567", city: "Dakar" },
+  { name: "Fatou Mbaye", phone: "+221762345678", city: "Thiès" },
+  { name: "Oumar Sy", phone: "+221783456789", city: "Saint-Louis" },
+  { name: "Aissatou Diop", phone: "+221704567890", city: "Ziguinchor" },
 ]
 
 type ScoreResult = {
   score: number
-  risk: "LOW" | "MEDIUM" | "HIGH"
+  risk_level: "LOW" | "MEDIUM" | "HIGH"
   recommendation: "APPROVE" | "REVIEW" | "DECLINE"
   confidence: number
-  latency: number
-  factors: { name: string; score: number; impact: "positive" | "negative" | "neutral" }[]
-  explanation: string
-}
-
-function generateMockScore(name: string): ScoreResult {
-  const hash = name.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0)
-  const score = 450 + (hash % 400)
-  const risk = score >= 700 ? "LOW" : score >= 550 ? "MEDIUM" : "HIGH"
-  const recommendation = score >= 700 ? "APPROVE" : score >= 550 ? "REVIEW" : "DECLINE"
-
-  return {
-    score,
-    risk,
-    recommendation,
-    confidence: 88 + (hash % 10),
-    latency: 240 + (hash % 100),
-    factors: [
-      { name: "Mobile Money Flow", score: 60 + (hash % 35), impact: "positive" },
-      { name: "Repayment History", score: 50 + (hash % 40), impact: score > 650 ? "positive" : "negative" },
-      { name: "Behavioral Score", score: 65 + (hash % 30), impact: "positive" },
-      { name: "Social Signals", score: 40 + (hash % 45), impact: "neutral" },
-      { name: "Income Regularity", score: 55 + (hash % 35), impact: score > 600 ? "positive" : "negative" },
-    ],
-    explanation:
-      score >= 700
-        ? `${name} présente un profil de risque faible. Les flux mobile money sont réguliers et l'historique de remboursement est solide.`
-        : score >= 550
-        ? `${name} présente un profil de risque modéré. Une vérification supplémentaire est recommandée avant approbation.`
-        : `${name} présente un profil de risque élevé. Les signaux comportementaux indiquent un risque de défaut élevé.`,
-  }
+  latency_ms: number
+  factors: { [key: string]: number }
+  explanation: { fr: string; en: string }
+  request_id: string
+  powered_by: string
 }
 
 export default function PlaygroundPage() {
@@ -55,34 +32,68 @@ export default function PlaygroundPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [result, setResult] = useState<ScoreResult | null>(null)
   const [logs, setLogs] = useState<string[]>([])
+  const [error, setError] = useState<string | null>(null)
+
+  const addLog = (msg: string) => setLogs((prev) => [...prev, msg])
 
   const handleScore = async () => {
     if (!name.trim()) return
 
     setIsLoading(true)
     setResult(null)
+    setError(null)
     setLogs([])
 
-    const steps = [
-      "$ kredal score --init",
-      "> Connecting to Kredal API...",
-      "> Fetching alternative data sources...",
-      ">  mobile_money: ✓ analyzed",
-      ">  behavioral: ✓ analyzed",
-      ">  social_signals: ✓ analyzed",
-      ">  repayment_history: ✓ analyzed",
-      "> Running ML model...",
-      "> Generating explanation...",
-      "> Score generated ✓",
-    ]
+    addLog("$ kredal score --init")
+    await new Promise((r) => setTimeout(r, 300))
+    addLog("> Connecting to Kredal API...")
+    await new Promise((r) => setTimeout(r, 400))
+    addLog("> Fetching alternative data sources...")
+    await new Promise((r) => setTimeout(r, 300))
 
-    for (let i = 0; i < steps.length; i++) {
-      await new Promise((r) => setTimeout(r, 200 + Math.random() * 150))
-      setLogs((prev) => [...prev, steps[i]])
+    try {
+      const response = await fetch(`${KREDAL_API}/v1/score`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${API_KEY}`,
+        },
+        body: JSON.stringify({
+          name: name.trim(),
+          phone: phone.trim() || undefined,
+          country: "SN",
+          mobile_money: true,
+          explain: true,
+        }),
+      })
+
+      addLog(">  mobile_money: ✓ analyzed")
+      await new Promise((r) => setTimeout(r, 200))
+      addLog(">  behavioral: ✓ analyzed")
+      await new Promise((r) => setTimeout(r, 200))
+      addLog(">  repayment_history: ✓ analyzed")
+      await new Promise((r) => setTimeout(r, 200))
+      addLog("> Running ML model...")
+      await new Promise((r) => setTimeout(r, 300))
+
+      if (!response.ok) {
+        const err = await response.json()
+        throw new Error(err.detail?.message || "API error")
+      }
+
+      const data: ScoreResult = await response.json()
+
+      addLog("> Generating explanation...")
+      await new Promise((r) => setTimeout(r, 200))
+      addLog(`> Score generated ✓ — ${data.latency_ms}ms`)
+
+      setResult(data)
+
+    } catch (err: any) {
+      addLog("> ✗ Error: " + err.message)
+      setError(err.message)
     }
 
-    const mockResult = generateMockScore(name)
-    setResult(mockResult)
     setIsLoading(false)
   }
 
@@ -91,6 +102,7 @@ export default function PlaygroundPage() {
     setPhone(borrower.phone)
     setResult(null)
     setLogs([])
+    setError(null)
   }
 
   const handleReset = () => {
@@ -98,6 +110,7 @@ export default function PlaygroundPage() {
     setPhone("")
     setResult(null)
     setLogs([])
+    setError(null)
   }
 
   const riskConfig = {
@@ -107,9 +120,17 @@ export default function PlaygroundPage() {
   }
 
   const recommendationConfig = {
-    APPROVE: { color: "text-primary", label: "APPROVE" },
-    REVIEW: { color: "text-yellow-500", label: "REVIEW" },
-    DECLINE: { color: "text-destructive", label: "DECLINE" },
+    APPROVE: { color: "text-primary" },
+    REVIEW: { color: "text-yellow-500" },
+    DECLINE: { color: "text-destructive" },
+  }
+
+  const factorLabels: { [key: string]: string } = {
+    mobile_money_flow: "Mobile Money Flow",
+    repayment_history: "Repayment History",
+    behavioral_score: "Behavioral Score",
+    income_regularity: "Income Regularity",
+    social_signals: "Social Signals",
   }
 
   return (
@@ -132,11 +153,19 @@ export default function PlaygroundPage() {
             <p className="max-w-xl text-base sm:text-lg text-muted-foreground leading-relaxed">
               Score a borrower in real-time. No account required — just enter a name and see Kredal in action.
             </p>
+
+            {/* Live API badge */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-4 py-2">
+              <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+              <span className="font-mono text-xs text-primary">
+                Connected to Kredal API — localhost:8000
+              </span>
+            </div>
           </div>
 
           <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
 
-            {/* Left — Input */}
+            {/* Left */}
             <div className="space-y-5 animate-fade-in-up stagger-2">
 
               {/* Sample borrowers */}
@@ -170,9 +199,7 @@ export default function PlaygroundPage() {
 
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <label className="font-mono text-xs text-muted-foreground">
-                      {">"} Full name *
-                    </label>
+                    <label className="font-mono text-xs text-muted-foreground">{">"} Full name *</label>
                     <input
                       type="text"
                       value={name}
@@ -181,16 +208,13 @@ export default function PlaygroundPage() {
                       className="w-full rounded-lg border border-border bg-background/50 px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground/50 transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/50"
                     />
                   </div>
-
                   <div className="space-y-1.5">
-                    <label className="font-mono text-xs text-muted-foreground">
-                      {">"} Phone number (optional)
-                    </label>
+                    <label className="font-mono text-xs text-muted-foreground">{">"} Phone (optional)</label>
                     <input
                       type="text"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="ex: +221 77 123 4567"
+                      placeholder="ex: +221771234567"
                       className="w-full rounded-lg border border-border bg-background/50 px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground/50 transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/50"
                     />
                   </div>
@@ -203,11 +227,7 @@ export default function PlaygroundPage() {
                     className="group relative flex-1 inline-flex items-center justify-center gap-3 overflow-hidden rounded-lg border border-primary bg-primary/10 px-6 py-3.5 font-mono text-sm text-primary transition-all duration-500 hover:bg-primary hover:text-primary-foreground active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <span className="relative z-10 flex items-center gap-2">
-                      {isLoading ? (
-                        <RefreshCw className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Zap className="h-4 w-4" />
-                      )}
+                      {isLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
                       {isLoading ? "Scoring..." : "Run Score"}
                     </span>
                     <ArrowRight className="relative z-10 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -217,7 +237,7 @@ export default function PlaygroundPage() {
                   {(result || logs.length > 0) && (
                     <button
                       onClick={handleReset}
-                      className="flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-3.5 font-mono text-xs text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:text-primary active:scale-[0.98]"
+                      className="flex items-center justify-center rounded-lg border border-border px-4 py-3.5 text-muted-foreground transition-all hover:border-primary/50 hover:text-primary active:scale-[0.98]"
                     >
                       <RefreshCw className="h-4 w-4" />
                     </button>
@@ -225,15 +245,15 @@ export default function PlaygroundPage() {
                 </div>
 
                 <p className="font-mono text-[10px] text-muted-foreground/50 text-center">
-                  * This is a sandbox environment. Data is simulated.
+                  * Sandbox — connected to Kredal API v1.0
                 </p>
               </div>
             </div>
 
-            {/* Right — Terminal + Result */}
+            {/* Right */}
             <div className="space-y-5 animate-fade-in-up stagger-3">
 
-              {/* Terminal logs */}
+              {/* Terminal */}
               <div className="rounded-xl border border-border bg-card/60 overflow-hidden">
                 <div className="flex items-center gap-2 border-b border-border/50 bg-secondary/40 px-4 py-3">
                   <div className="h-2.5 w-2.5 rounded-full bg-destructive/60" />
@@ -253,7 +273,6 @@ export default function PlaygroundPage() {
                     </div>
                   )}
                 </div>
-
                 <div className="p-5 font-mono text-xs space-y-1.5 min-h-[200px]">
                   {logs.length === 0 && !isLoading && (
                     <div className="flex items-center gap-2 text-muted-foreground/40">
@@ -262,126 +281,91 @@ export default function PlaygroundPage() {
                     </div>
                   )}
                   {logs.map((log, i) => (
-                    <div
-                      key={i}
-                      className={cn(
-                        "transition-all duration-200",
-                        log.startsWith("$") ? "text-primary" : log.includes("✓") ? "text-primary" : "text-muted-foreground",
-                      )}
-                    >
+                    <div key={i} className={cn(
+                      log.startsWith("$") ? "text-primary" :
+                      log.includes("✓") ? "text-primary" :
+                      log.includes("✗") ? "text-destructive" :
+                      "text-muted-foreground"
+                    )}>
                       {log}
                     </div>
                   ))}
-                  {isLoading && logs.length > 0 && (
-                    <div className="flex items-center gap-1 text-muted-foreground/40">
-                      <span className="typing-cursor" />
-                    </div>
-                  )}
                 </div>
               </div>
 
-              {/* Score Result */}
+              {/* Error */}
+              {error && (
+                <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-5 animate-scale-in">
+                  <p className="font-mono text-xs text-destructive">✗ {error}</p>
+                  <p className="font-mono text-[10px] text-muted-foreground mt-2">
+                    Vérifiez que le backend tourne sur localhost:8000
+                  </p>
+                </div>
+              )}
+
+              {/* Result */}
               {result && (
                 <div className="rounded-xl border border-primary/30 bg-card/60 glass overflow-hidden animate-scale-in">
                   <div className="flex items-center justify-between border-b border-border/50 bg-secondary/40 px-5 py-3">
                     <span className="font-mono text-xs text-muted-foreground">kredal://score/result</span>
-                    <span className="font-mono text-[10px] text-primary">
-                      {result.latency}ms
-                    </span>
+                    <span className="font-mono text-[10px] text-primary">{result.latency_ms}ms</span>
                   </div>
-
                   <div className="p-5 sm:p-6 space-y-6">
-                    {/* Score + Risk */}
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <div className="font-mono text-6xl font-bold text-primary leading-none">
-                          {result.score}
-                        </div>
-                        <div className="font-mono text-xs text-muted-foreground mt-1">
-                          credit score / 1000
-                        </div>
+                        <div className="font-mono text-6xl font-bold text-primary leading-none">{result.score}</div>
+                        <div className="font-mono text-xs text-muted-foreground mt-1">credit score / 1000</div>
                       </div>
                       <div className="text-right space-y-2">
-                        <div className={cn(
-                          "inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 font-mono text-xs font-bold",
-                          riskConfig[result.risk].bg,
-                          riskConfig[result.risk].color,
-                        )}>
-                          {result.risk} RISK
+                        <div className={cn("inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 font-mono text-xs font-bold", riskConfig[result.risk_level].bg, riskConfig[result.risk_level].color)}>
+                          {result.risk_level} RISK
                         </div>
-                        <div className="block">
-                          <span className={cn(
-                            "font-mono text-lg font-bold",
-                            recommendationConfig[result.recommendation].color,
-                          )}>
+                        <div>
+                          <span className={cn("font-mono text-lg font-bold", recommendationConfig[result.recommendation].color)}>
                             → {result.recommendation}
                           </span>
                         </div>
-                        <div className="font-mono text-xs text-muted-foreground">
-                          {result.confidence}% confidence
-                        </div>
+                        <div className="font-mono text-xs text-muted-foreground">{result.confidence}% confidence</div>
                       </div>
                     </div>
 
-                    {/* Score bar */}
                     <div className="space-y-2">
                       <div className="h-2 w-full overflow-hidden rounded-full bg-secondary/80">
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-destructive via-yellow-500 to-primary transition-all duration-1000"
-                          style={{ width: `${(result.score / 1000) * 100}%` }}
-                        />
+                        <div className="h-full rounded-full bg-gradient-to-r from-destructive via-yellow-500 to-primary transition-all duration-1000" style={{ width: `${(result.score / 1000) * 100}%` }} />
                       </div>
                       <div className="flex justify-between font-mono text-[10px] text-muted-foreground">
-                        <span>0</span>
-                        <span>500</span>
-                        <span>1000</span>
+                        <span>0</span><span>500</span><span>1000</span>
                       </div>
                     </div>
 
-                    {/* Factors */}
                     <div className="space-y-2">
-                      <p className="font-mono text-xs text-muted-foreground uppercase tracking-wider">
-                        Key factors
-                      </p>
-                      {result.factors.map((factor) => (
-                        <div key={factor.name} className="flex items-center gap-3">
-                          <span className="font-mono text-xs text-muted-foreground w-36 shrink-0">
-                            {factor.name}
-                          </span>
+                      <p className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Key factors</p>
+                      {Object.entries(result.factors).map(([key, value]) => (
+                        <div key={key} className="flex items-center gap-3">
+                          <span className="font-mono text-xs text-muted-foreground w-36 shrink-0">{factorLabels[key] || key}</span>
                           <div className="flex-1 h-1.5 rounded-full bg-secondary/80 overflow-hidden">
-                            <div
-                              className={cn(
-                                "h-full rounded-full transition-all duration-700",
-                                factor.impact === "positive" ? "bg-primary" : factor.impact === "negative" ? "bg-destructive" : "bg-yellow-500",
-                              )}
-                              style={{ width: `${factor.score}%` }}
-                            />
+                            <div className="h-full rounded-full bg-primary transition-all duration-700" style={{ width: `${value}%` }} />
                           </div>
-                          <span className={cn(
-                            "font-mono text-xs w-8 text-right shrink-0",
-                            factor.impact === "positive" ? "text-primary" : factor.impact === "negative" ? "text-destructive" : "text-yellow-500",
-                          )}>
-                            {factor.score}
-                          </span>
+                          <span className="font-mono text-xs text-primary w-8 text-right shrink-0">{value}</span>
                         </div>
                       ))}
                     </div>
 
-                    {/* Explanation */}
-                    <div className="rounded-lg border border-border/50 bg-secondary/20 p-4">
-                      <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mb-2">
-                        AI Explanation
-                      </p>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {result.explanation}
-                      </p>
-                    </div>
+                    {result.explanation?.fr && (
+                      <div className="rounded-lg border border-border/50 bg-secondary/20 p-4">
+                        <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mb-2">AI Explanation</p>
+                        <p className="text-sm text-muted-foreground leading-relaxed">{result.explanation.fr}</p>
+                      </div>
+                    )}
+
+                    <p className="font-mono text-[10px] text-muted-foreground/40 text-center">
+                      {result.powered_by} · {result.request_id}
+                    </p>
                   </div>
                 </div>
               )}
             </div>
           </div>
-
         </div>
       </div>
     </main>
