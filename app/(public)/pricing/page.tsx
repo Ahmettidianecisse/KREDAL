@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Check, Zap, ArrowRight, Sparkles } from "lucide-react"
+import { Check, Zap, ArrowRight, Sparkles, TrendingUp, Shield, Clock } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export const metadata: Metadata = {
@@ -13,10 +13,11 @@ const plans = [
     name: "Sandbox",
     price: "0",
     period: "forever",
-    description: "Perfect for developers testing the Kredal API.",
+    description: "Pour les développeurs qui testent l'API Kredal.",
     calls: "500",
     highlight: false,
     featured: false,
+    badge: null,
     cta: "Start free",
     ctaHref: "/docs",
     features: [
@@ -29,22 +30,44 @@ const plans = [
     ],
   },
   {
+    id: "starter",
+    name: "Starter",
+    price: "49",
+    period: "/ month",
+    description: "Pour les MFIs et fintechs qui démarrent leur intégration.",
+    calls: "2,000",
+    highlight: false,
+    featured: true,
+    badge: "Early Adopter",
+    cta: "Get started",
+    ctaHref: "/checkout/starter",
+    features: [
+      "2,000 API calls / month",
+      "Kredal Score API",
+      "Explainable AI output",
+      "Email support",
+      "99.9% uptime SLA",
+      "Full documentation",
+    ],
+  },
+  {
     id: "growth",
     name: "Growth",
-    price: "99",
+    price: "149",
     period: "/ month",
-    description: "For early-stage fintechs ready to go live.",
+    description: "Pour les fintechs en croissance prêtes à passer en production.",
     calls: "10,000",
     highlight: false,
     featured: true,
-    cta: "Get started",
+    badge: null,
+    cta: "Scale up",
     ctaHref: "/checkout/growth",
     features: [
       "10,000 API calls / month",
       "Kredal Score API",
       "FraudShield API",
       "Explainable AI output",
-      "Email support",
+      "Email + Slack support",
       "Webhook support",
       "99.9% uptime SLA",
       "Full documentation",
@@ -53,20 +76,21 @@ const plans = [
   {
     id: "scale",
     name: "Scale",
-    price: "299",
+    price: "499",
     period: "/ month",
-    description: "For growing fintechs with high loan volumes.",
+    description: "Pour les institutions avec des volumes de prêts élevés.",
     calls: "50,000",
     highlight: true,
     featured: true,
-    cta: "Scale now",
+    badge: "Most Popular",
+    cta: "Go to Scale",
     ctaHref: "/checkout/scale",
     features: [
       "50,000 API calls / month",
       "All Growth features",
       "DocIntel API",
       "CashFlow Predictor",
-      "Priority support",
+      "Priority support 24h",
       "Custom webhooks",
       "Advanced analytics",
       "Batch processing",
@@ -78,10 +102,11 @@ const plans = [
     name: "Enterprise",
     price: "Custom",
     period: "",
-    description: "For banks and large institutions at scale.",
+    description: "Pour les banques et grandes institutions à grande échelle.",
     calls: "Unlimited",
     highlight: false,
     featured: false,
+    badge: null,
     cta: "Contact us",
     ctaHref: "mailto:hello@kredal.ai",
     features: [
@@ -96,6 +121,31 @@ const plans = [
       "Revenue share model",
       "Custom contract",
     ],
+  },
+]
+
+// ROI Calculator data — the key marketing element
+const roiStats = [
+  {
+    icon: TrendingUp,
+    label: "Économies moyennes",
+    value: "$12,400",
+    sub: "par mois sur les défauts évités",
+    color: "text-primary",
+  },
+  {
+    icon: Shield,
+    label: "Réduction des défauts",
+    value: "-28%",
+    sub: "en moyenne après 90 jours",
+    color: "text-primary",
+  },
+  {
+    icon: Clock,
+    label: "Temps d'analyse",
+    value: "300ms",
+    sub: "vs 72h en processus manuel",
+    color: "text-primary",
   },
 ]
 
@@ -116,6 +166,14 @@ const faqs = [
     q: "Y a-t-il des frais cachés ?",
     a: "Non. Le prix affiché est le prix total. Pas de frais d'installation, pas de frais de support caché.",
   },
+  {
+    q: "Est-ce que je peux tester avant de payer ?",
+    a: "Oui — le plan Sandbox est gratuit pour toujours. Testez l'API, intégrez, validez. Passez en payant quand vous êtes prêt.",
+  },
+  {
+    q: "Que se passe-t-il si je dépasse mon quota ?",
+    a: "Vous recevez une alerte à 80% du quota. Au-delà, les appels supplémentaires sont facturés à $0.02/appel ou vous pouvez upgrader votre plan.",
+  },
 ]
 
 export default function PricingPage() {
@@ -125,7 +183,7 @@ export default function PricingPage() {
         <div className="mx-auto max-w-7xl">
 
           {/* Header */}
-          <div className="mb-16 sm:mb-20 text-center space-y-4 animate-fade-in-up">
+          <div className="mb-10 sm:mb-14 text-center space-y-4 animate-fade-in-up">
             <p className="font-mono text-xs uppercase tracking-[0.25em] sm:tracking-[0.35em] text-primary">
               Pricing
             </p>
@@ -140,27 +198,70 @@ export default function PricingPage() {
               Start free, pay as you grow. No hidden fees, no surprises —
               just transparent pricing built for African fintechs.
             </p>
+
+            {/* Social proof */}
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+              </span>
+              <p className="font-mono text-xs text-muted-foreground">
+                Early adopter pricing — locked in for your first 12 months
+              </p>
+            </div>
+          </div>
+
+          {/* ROI Banner — soft marketing */}
+          <div className="mb-12 rounded-xl border border-primary/20 bg-primary/5 p-6 sm:p-8 animate-fade-in-up">
+            <p className="font-mono text-xs uppercase tracking-widest text-primary text-center mb-6">
+              Pourquoi Kredal se paye tout seul
+            </p>
+            <div className="grid gap-6 sm:grid-cols-3">
+              {roiStats.map((stat, i) => (
+                <div key={i} className="flex items-center gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-primary/30 bg-primary/10">
+                    <stat.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className={cn("text-2xl font-bold font-mono", stat.color)}>{stat.value}</p>
+                    <p className="text-xs text-muted-foreground">{stat.label}</p>
+                    <p className="text-[10px] text-muted-foreground/60">{stat.sub}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Subtle ROI nudge */}
+            <p className="text-center text-xs text-muted-foreground mt-6 font-mono">
+              Un client Scale à $499/mois économise en moyenne{" "}
+              <span className="text-primary font-bold">$12,400/mois</span> sur les défauts.
+              ROI : <span className="text-primary font-bold">24x</span>.
+            </p>
           </div>
 
           {/* Pricing Grid */}
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-20 sm:mb-28">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5 mb-20 sm:mb-28">
             {plans.map((plan, index) => (
               <div
                 key={plan.id}
                 className={cn(
-                  "group relative overflow-hidden rounded-xl border bg-card/40 p-6 sm:p-7 glass transition-all duration-400 hover-lift animate-fade-in-up",
+                  "group relative overflow-hidden rounded-xl border bg-card/40 p-6 glass transition-all duration-400 hover-lift animate-fade-in-up",
                   plan.highlight
                     ? "border-primary/50 bg-gradient-to-br from-primary/8 via-card/50 to-primary/8 lg:scale-105"
                     : "border-border/60 hover:border-primary/40 hover:bg-card/70",
                 )}
                 style={{ animationDelay: `${index * 100 + 200}ms` }}
               >
-                {/* Most popular badge */}
-                {plan.highlight && (
-                  <div className="absolute left-1/2 -translate-x-1/2 -top-px flex items-center gap-2 rounded-b-lg border border-t-0 border-primary/40 bg-primary/15 px-3.5 py-1.5 animate-pulse-glow">
-                    <Sparkles className="h-3 w-3 text-primary" />
+                {/* Badge */}
+                {plan.badge && (
+                  <div className={cn(
+                    "absolute left-1/2 -translate-x-1/2 -top-px flex items-center gap-2 rounded-b-lg border border-t-0 px-3.5 py-1.5",
+                    plan.highlight
+                      ? "border-primary/40 bg-primary/15 animate-pulse-glow"
+                      : "border-primary/20 bg-primary/8"
+                  )}>
+                    {plan.highlight && <Sparkles className="h-3 w-3 text-primary" />}
                     <span className="font-mono text-[10px] uppercase tracking-wider text-primary font-medium">
-                      Most Popular
+                      {plan.badge}
                     </span>
                   </div>
                 )}
@@ -176,7 +277,7 @@ export default function PricingPage() {
                     )}
                     <span className={cn(
                       "font-bold tracking-tight leading-none",
-                      plan.price === "Custom" ? "text-3xl" : "text-4xl sm:text-5xl",
+                      plan.price === "Custom" ? "text-3xl" : "text-4xl",
                     )}>
                       {plan.price}
                     </span>
@@ -187,19 +288,25 @@ export default function PricingPage() {
                   <p className="font-mono text-xs text-primary">
                     {plan.calls} calls / month
                   </p>
+                  {/* Cost per call — subtle value framing */}
+                  {plan.price !== "0" && plan.price !== "Custom" && (
+                    <p className="font-mono text-[10px] text-muted-foreground/50 mt-0.5">
+                      ≈ ${(Number(plan.price) / Number(plan.calls.replace(/,/g, "")) * 1000).toFixed(2)} / 1k calls
+                    </p>
+                  )}
                 </div>
 
                 <div className="h-px bg-border/50 mb-5" />
 
-                <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+                <p className="text-xs text-muted-foreground leading-relaxed mb-5">
                   {plan.description}
                 </p>
 
                 {/* Features */}
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-2.5 mb-7">
                   {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3 text-sm">
-                      <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                    <li key={feature} className="flex items-start gap-2.5 text-xs">
+                      <Check className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
                       <span className="text-muted-foreground">{feature}</span>
                     </li>
                   ))}
@@ -209,26 +316,37 @@ export default function PricingPage() {
                 <a
                   href={plan.ctaHref}
                   className={cn(
-                    "group/btn relative w-full inline-flex items-center justify-center gap-3 overflow-hidden rounded-lg border px-6 py-3 font-mono text-xs uppercase tracking-wider transition-all duration-500 active:scale-[0.98]",
+                    "group/btn relative w-full inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg border px-4 py-2.5 font-mono text-xs uppercase tracking-wider transition-all duration-500 active:scale-[0.98]",
                     plan.highlight
                       ? "border-primary bg-primary/15 text-primary hover:bg-primary hover:text-primary-foreground"
                       : "border-border text-muted-foreground hover:border-primary/50 hover:text-primary hover:bg-primary/10",
                   )}
                 >
                   <span className="relative z-10">{plan.cta}</span>
-                  <ArrowRight className="relative z-10 h-3.5 w-3.5 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  <ArrowRight className="relative z-10 h-3 w-3 transition-transform duration-300 group-hover/btn:translate-x-1" />
                   {plan.highlight && (
                     <span className="absolute inset-0 -translate-x-full bg-primary transition-transform duration-500 group-hover/btn:translate-x-0" />
                   )}
                 </a>
 
-                {/* Bottom border animation */}
-                <div className="absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-primary via-primary/80 to-transparent transition-all duration-500 group-hover:w-full" />
+                <div className="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-primary via-primary/80 to-transparent transition-all duration-500 group-hover:w-full" />
               </div>
             ))}
           </div>
 
-          {/* Usage based section */}
+          {/* Annual pricing nudge */}
+          <div className="mb-16 text-center animate-fade-in-up">
+            <div className="inline-flex items-center gap-3 rounded-full border border-primary/20 bg-primary/5 px-5 py-2.5">
+              <Zap className="h-4 w-4 text-primary" />
+              <p className="font-mono text-xs text-muted-foreground">
+                Paiement annuel ?{" "}
+                <span className="text-primary font-bold">2 mois offerts</span>
+                {" "}— contactez-nous à hello@kredal.ai
+              </p>
+            </div>
+          </div>
+
+          {/* Revenue Share section */}
           <div className="mb-20 sm:mb-28 rounded-xl border border-border bg-card/40 glass p-8 sm:p-12 animate-fade-in-up hover-lift">
             <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
               <div className="space-y-4">
@@ -242,16 +360,16 @@ export default function PricingPage() {
                     Grow together.
                   </span>
                 </h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  For large institutions, we offer a revenue share model — instead of a fixed monthly fee,
-                  Kredal takes a small percentage on each loan decision powered by our AI.
-                  The more you lend, the more we earn together.
+                <p className="text-muted-foreground leading-relaxed text-sm">
+                  Pour les grandes institutions, on propose un modèle de revenue share — pas de frais fixes,
+                  Kredal prend un petit pourcentage sur chaque décision de prêt alimentée par notre IA.
+                  Vous payez uniquement quand vous gagnez.
                 </p>
                 <a
                   href="mailto:hello@kredal.ai"
                   className="group inline-flex items-center gap-3 font-mono text-sm text-primary transition-all duration-300 hover:gap-4"
                 >
-                  <span className="underline-animate">Talk to us about revenue share</span>
+                  <span className="underline-animate">Parler du revenue share</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </a>
               </div>
@@ -262,28 +380,32 @@ export default function PricingPage() {
                   <div className="h-2.5 w-2.5 rounded-full bg-destructive/60" />
                   <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/60" />
                   <div className="h-2.5 w-2.5 rounded-full bg-primary/60" />
-                  <span className="ml-3 font-mono text-xs text-muted-foreground">revenue_share.calc</span>
+                  <span className="ml-3 font-mono text-xs text-muted-foreground">roi_calculator.js</span>
                 </div>
                 <div className="p-5 font-mono text-xs space-y-2">
+                  <div className="text-muted-foreground">
+                    <span className="text-primary">{">"} </span>
+                    <span>// Plan Scale — $499/mois</span>
+                  </div>
                   <div className="flex justify-between text-muted-foreground">
-                    <span className="text-primary">$</span>
-                    <span>loans_this_month = 1_000_000 USD</span>
+                    <span className="pl-4">portfolio</span>
+                    <span className="text-primary">= $1,000,000 USD</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground pl-4">kredal_share</span>
-                    <span className="text-primary">= 0.5%</span>
+                    <span className="text-muted-foreground pl-4">défauts_évités (28%)</span>
+                    <span className="text-primary">= $280,000 récupérés</span>
                   </div>
                   <div className="h-px bg-border/50 my-3" />
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground pl-4">kredal_revenue</span>
-                    <span className="text-primary font-bold">= $5,000 / month</span>
+                    <span className="text-muted-foreground pl-4">coût_kredal</span>
+                    <span className="text-primary">= $499 / mois</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground pl-4">your_savings_vs_fixed</span>
-                    <span className="text-primary">= $0 fixed cost</span>
+                    <span className="text-muted-foreground pl-4">ROI</span>
+                    <span className="text-primary font-bold text-sm">= 561x 🚀</span>
                   </div>
                   <div className="pt-2 text-muted-foreground/50 text-[10px]">
-                    # only pay when you earn
+                    # based on avg customer results
                   </div>
                 </div>
               </div>
@@ -306,11 +428,39 @@ export default function PricingPage() {
                 >
                   <div className="flex items-start gap-3 mb-3">
                     <span className="text-primary font-mono text-sm shrink-0">{">"}</span>
-                    <h3 className="font-semibold tracking-tight">{faq.q}</h3>
+                    <h3 className="font-semibold tracking-tight text-sm">{faq.q}</h3>
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed pl-6">{faq.a}</p>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="mt-20 text-center animate-fade-in-up">
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-8 sm:p-12">
+              <p className="font-mono text-xs uppercase tracking-widest text-primary mb-4">Prêt à commencer ?</p>
+              <h2 className="text-3xl font-bold mb-4">Intégrez Kredal en moins de 10 minutes.</h2>
+              <p className="text-muted-foreground text-sm mb-8 max-w-md mx-auto">
+                Documentation complète, sandbox gratuit, support réactif.
+                Vos équipes techniques seront opérationnelles aujourd'hui.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="/docs"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary bg-primary/15 px-6 py-3 font-mono text-sm text-primary transition-all hover:bg-primary hover:text-primary-foreground"
+                >
+                  <Zap className="h-4 w-4" />
+                  Start for free
+                </a>
+                <a
+                  href="mailto:hello@kredal.ai"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-6 py-3 font-mono text-sm text-muted-foreground transition-all hover:border-primary/50 hover:text-primary"
+                >
+                  Talk to sales
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
             </div>
           </div>
 
