@@ -14,14 +14,14 @@ const plans = [
     price: "0",
     period: "forever",
     description: "Pour les développeurs qui testent l'API Kredal.",
-    calls: "500",
+    calls: "100",
     highlight: false,
     featured: false,
     badge: null,
     cta: "Start free",
     ctaHref: "/docs",
     features: [
-      "500 API calls / month",
+      "100 API calls / month",
       "Kredal Score API",
       "JSON responses",
       "Community support",
@@ -32,17 +32,17 @@ const plans = [
   {
     id: "starter",
     name: "Starter",
-    price: "49",
+    price: "79",
     period: "/ month",
-    description: "Pour les MFIs et fintechs qui démarrent leur intégration.",
-    calls: "2,000",
+    description: "Pour les petites MFIs qui démarrent leur intégration.",
+    calls: "300",
     highlight: false,
-    featured: true,
+    featured: false,
     badge: "Early Adopter",
     cta: "Get started",
     ctaHref: "/checkout/starter",
     features: [
-      "2,000 API calls / month",
+      "300 API calls / month",
       "Kredal Score API",
       "Explainable AI output",
       "Email support",
@@ -53,17 +53,17 @@ const plans = [
   {
     id: "growth",
     name: "Growth",
-    price: "149",
+    price: "199",
     period: "/ month",
     description: "Pour les fintechs en croissance prêtes à passer en production.",
-    calls: "10,000",
+    calls: "1,000",
     highlight: false,
     featured: true,
-    badge: null,
+    badge: "Most Popular",
     cta: "Scale up",
     ctaHref: "/checkout/growth",
     features: [
-      "10,000 API calls / month",
+      "1,000 API calls / month",
       "Kredal Score API",
       "FraudShield API",
       "Explainable AI output",
@@ -78,15 +78,15 @@ const plans = [
     name: "Scale",
     price: "499",
     period: "/ month",
-    description: "Pour les institutions avec des volumes de prêts élevés.",
-    calls: "50,000",
+    description: "Pour les grandes MFIs et institutions avec des volumes élevés.",
+    calls: "5,000",
     highlight: true,
     featured: true,
-    badge: "Most Popular",
+    badge: "Best Value",
     cta: "Go to Scale",
     ctaHref: "/checkout/scale",
     features: [
-      "50,000 API calls / month",
+      "5,000 API calls / month",
       "All Growth features",
       "DocIntel API",
       "CashFlow Predictor",
@@ -124,12 +124,11 @@ const plans = [
   },
 ]
 
-// ROI Calculator data — the key marketing element
 const roiStats = [
   {
     icon: TrendingUp,
     label: "Économies moyennes",
-    value: "$12,400",
+    value: "$9,240",
     sub: "par mois sur les défauts évités",
     color: "text-primary",
   },
@@ -198,8 +197,6 @@ export default function PricingPage() {
               Start free, pay as you grow. No hidden fees, no surprises —
               just transparent pricing built for African fintechs.
             </p>
-
-            {/* Social proof */}
             <div className="flex items-center justify-center gap-2 pt-2">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
@@ -211,7 +208,7 @@ export default function PricingPage() {
             </div>
           </div>
 
-          {/* ROI Banner — soft marketing */}
+          {/* ROI Banner */}
           <div className="mb-12 rounded-xl border border-primary/20 bg-primary/5 p-6 sm:p-8 animate-fade-in-up">
             <p className="font-mono text-xs uppercase tracking-widest text-primary text-center mb-6">
               Pourquoi Kredal se paye tout seul
@@ -230,11 +227,10 @@ export default function PricingPage() {
                 </div>
               ))}
             </div>
-            {/* Subtle ROI nudge */}
             <p className="text-center text-xs text-muted-foreground mt-6 font-mono">
-              Un client Scale à $499/mois économise en moyenne{" "}
-              <span className="text-primary font-bold">$12,400/mois</span> sur les défauts.
-              ROI : <span className="text-primary font-bold">24x</span>.
+              Un client Starter à $79/mois économise en moyenne{" "}
+              <span className="text-primary font-bold">$9,240/mois</span> sur les défauts évités.
+              ROI : <span className="text-primary font-bold">116x</span>.
             </p>
           </div>
 
@@ -251,7 +247,6 @@ export default function PricingPage() {
                 )}
                 style={{ animationDelay: `${index * 100 + 200}ms` }}
               >
-                {/* Badge */}
                 {plan.badge && (
                   <div className={cn(
                     "absolute left-1/2 -translate-x-1/2 -top-px flex items-center gap-2 rounded-b-lg border border-t-0 px-3.5 py-1.5",
@@ -266,7 +261,6 @@ export default function PricingPage() {
                   </div>
                 )}
 
-                {/* Plan name */}
                 <div className="mb-5 mt-2">
                   <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-3">
                     {plan.name}
@@ -288,7 +282,6 @@ export default function PricingPage() {
                   <p className="font-mono text-xs text-primary">
                     {plan.calls} calls / month
                   </p>
-                  {/* Cost per call — subtle value framing */}
                   {plan.price !== "0" && plan.price !== "Custom" && (
                     <p className="font-mono text-[10px] text-muted-foreground/50 mt-0.5">
                       ≈ ${(Number(plan.price) / Number(plan.calls.replace(/,/g, "")) * 1000).toFixed(2)} / 1k calls
@@ -302,7 +295,6 @@ export default function PricingPage() {
                   {plan.description}
                 </p>
 
-                {/* Features */}
                 <ul className="space-y-2.5 mb-7">
                   {plan.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-2.5 text-xs">
@@ -312,7 +304,6 @@ export default function PricingPage() {
                   ))}
                 </ul>
 
-                {/* CTA */}
                 <a
                   href={plan.ctaHref}
                   className={cn(
@@ -346,7 +337,7 @@ export default function PricingPage() {
             </div>
           </div>
 
-          {/* Revenue Share section */}
+          {/* Revenue Share */}
           <div className="mb-20 sm:mb-28 rounded-xl border border-border bg-card/40 glass p-8 sm:p-12 animate-fade-in-up hover-lift">
             <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
               <div className="space-y-4">
@@ -374,7 +365,6 @@ export default function PricingPage() {
                 </a>
               </div>
 
-              {/* Terminal */}
               <div className="rounded-xl border border-border bg-card/60 overflow-hidden">
                 <div className="flex items-center gap-2 border-b border-border/50 bg-secondary/40 px-4 py-3">
                   <div className="h-2.5 w-2.5 rounded-full bg-destructive/60" />
@@ -385,27 +375,35 @@ export default function PricingPage() {
                 <div className="p-5 font-mono text-xs space-y-2">
                   <div className="text-muted-foreground">
                     <span className="text-primary">{">"} </span>
-                    <span>// Plan Scale — $499/mois</span>
+                    <span>// Plan Starter — $79/mois · MFI Dakar</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground">
-                    <span className="pl-4">portfolio</span>
-                    <span className="text-primary">= $1,000,000 USD</span>
+                    <span className="pl-4">prêts_par_mois</span>
+                    <span className="text-primary">= 200</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground pl-4">défauts_évités (28%)</span>
-                    <span className="text-primary">= $280,000 récupérés</span>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span className="pl-4">montant_moyen</span>
+                    <span className="text-primary">= $750</span>
+                  </div>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span className="pl-4">défauts_évités</span>
+                    <span className="text-primary">= -28%</span>
                   </div>
                   <div className="h-px bg-border/50 my-3" />
                   <div className="flex justify-between">
+                    <span className="text-muted-foreground pl-4">économies</span>
+                    <span className="text-primary font-bold">= $9,240 / mois</span>
+                  </div>
+                  <div className="flex justify-between">
                     <span className="text-muted-foreground pl-4">coût_kredal</span>
-                    <span className="text-primary">= $499 / mois</span>
+                    <span className="text-primary">= $79 / mois</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground pl-4">ROI</span>
-                    <span className="text-primary font-bold text-sm">= 561x 🚀</span>
+                    <span className="text-primary font-bold text-sm">= 116x 🚀</span>
                   </div>
                   <div className="pt-2 text-muted-foreground/50 text-[10px]">
-                    # based on avg customer results
+                    # based on avg MFI portfolio — Senegal
                   </div>
                 </div>
               </div>
@@ -418,7 +416,6 @@ export default function PricingPage() {
               <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">FAQ</p>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Questions fréquentes</h2>
             </div>
-
             <div className="grid gap-4 sm:grid-cols-2">
               {faqs.map((faq, index) => (
                 <div
