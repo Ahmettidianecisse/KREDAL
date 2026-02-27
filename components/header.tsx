@@ -179,9 +179,9 @@ export function Header() {
         {/* Mobile Menu */}
         <div
           className={cn(
-            "transition-all duration-400 md:hidden bg-background",
-            isMobileMenuOpen ? "max-h-96 opacity-100 pt-4" : "max-h-0 opacity-0",
-          )}
+          "overflow-hidden transition-all duration-400 md:hidden bg-background",
+          isMobileMenuOpen ? "max-h-96 opacity-100 pt-4" : "max-h-0 opacity-0",
+        )}
         >
           <div className="flex flex-col gap-1 border-t border-border/50 pt-4">
             {navItems.map((item, index) => (
