@@ -125,7 +125,7 @@ export default function DocsPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   return (
-    <main className="relative min-h-screen overflow-hidden scanlines">
+    <main className="relative min-h-screen scanlines">
       <div className="relative z-10 pt-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="flex gap-8 lg:gap-12">

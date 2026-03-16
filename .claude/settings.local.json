@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -X POST https://kredal-backend.onrender.com/v1/keys/register -H \"Content-Type: application/json\" -d \"{\"\"name\"\":\"\"Kredal Demo\"\",\"\"email\"\":\"\"demo@kredal.ai\"\",\"\"country\"\":\"\"SN\"\"}\")",
+      "Bash(curl -s -X POST https://kredal-backend.onrender.com/v1/keys/register -H \"Content-Type: application/json\" -d \"{\"\"name\"\":\"\"Kredal Playground\"\",\"\"email\"\":\"\"playground@kredal.ai\"\",\"\"country\"\":\"\"SN\"\"}\")"
+    ]
+  }
+}
