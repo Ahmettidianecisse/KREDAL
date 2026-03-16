@@ -15,7 +15,7 @@ const nextConfig = {
       { source: "/docs/portfolio", destination: "/docs", permanent: false },
       { source: "/docs/cashflow", destination: "/docs", permanent: false },
       { source: "/docs/kyc", destination: "/docs", permanent: false },
-      { source: "/docs/:path*", destination: "/docs", permanent: false },
+      { source: "/docs/:path+", destination: "/docs", permanent: false },
     ]
   },
 }
