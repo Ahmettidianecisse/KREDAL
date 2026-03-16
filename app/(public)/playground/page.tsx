@@ -298,7 +298,7 @@ export default function PlaygroundPage() {
                 <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-5 animate-scale-in">
                   <p className="font-mono text-xs text-destructive">✗ {error}</p>
                   <p className="font-mono text-[10px] text-muted-foreground mt-2">
-                    Vérifiez que le backend tourne sur localhost:8000
+                    Erreur de connexion au backend. Réessayez dans quelques secondes.
                   </p>
                 </div>
               )}
