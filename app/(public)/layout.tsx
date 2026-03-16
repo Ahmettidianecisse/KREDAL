@@ -8,7 +8,7 @@ export default function PublicLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="relative min-h-screen overflow-hidden scanlines">
+    <main className="relative min-h-screen scanlines">
       <CursorGlow />
       <div className="relative z-10">
         <Header />
