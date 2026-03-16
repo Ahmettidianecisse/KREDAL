@@ -8,7 +8,7 @@ const wipItems = [
     description: "Core credit scoring engine — 54+ alternative data signals, 287ms avg latency, explainable output",
     progress: 90,
     lastUpdated: "Feb 2026",
-    url: "/docs/score",
+    url: "/docs",
     status: "live",
   },
   {
@@ -17,7 +17,7 @@ const wipItems = [
     description: "Real-time fraud detection — SIM swap, mobile money fraud, synthetic identity patterns",
     progress: 65,
     lastUpdated: "Feb 2026",
-    url: "/docs/fraud",
+    url: "/docs",
     status: "building",
   },
   {
@@ -26,7 +26,7 @@ const wipItems = [
     description: "Document AI — PDF extraction, mobile money screenshots, OCR for 15+ African document types",
     progress: 55,
     lastUpdated: "Jan 2026",
-    url: "/docs/docintel",
+    url: "/docs",
     status: "building",
   },
   {
@@ -35,7 +35,7 @@ const wipItems = [
     description: "Multilingual voice scoring agent — Wolof, Bambara, Swahili, Hausa, French interview engine",
     progress: 35,
     lastUpdated: "Jan 2026",
-    url: "/docs/loanvoice",
+    url: "/docs",
     status: "forging",
   },
   {
@@ -44,7 +44,7 @@ const wipItems = [
     description: "Portfolio monitoring at scale — early warning alerts, default prediction for 500K+ borrowers",
     progress: 25,
     lastUpdated: "Dec 2025",
-    url: "/docs/portfolio",
+    url: "/docs",
     status: "forging",
   },
   {
@@ -53,7 +53,7 @@ const wipItems = [
     description: "African KYC — CNIB, passeport, carte d'électeur, liveness detection, face matching",
     progress: 20,
     lastUpdated: "Dec 2025",
-    url: "/docs/kyc",
+    url: "/docs",
     status: "forging",
   },
 ]
